@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Message from './Message'
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { db } from '../firebase'
@@ -7,7 +7,10 @@ import { setEmails } from '../redux/appSlice'
 
 const Messages = () => {
     const dispatch = useDispatch()
-    const { emails } = useSelector(store => store.appSlice)
+    const {searchText, emails } = useSelector(store => store.appSlice)
+    const [tempEmail, setTempEmail] = useState(emails)
+
+
     useEffect(()=> {
         const q = query(collection(db, 'emails'), orderBy('createdAt', 'desc'))
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -19,10 +22,18 @@ const Messages = () => {
         return () => unsubscribe()
     },[])
 
+    useEffect(() => {
+        const filteredEmail = emails?.filter((email) => {
+            return email?.subject?.toLowerCase().includes(searchText.toLowerCase()) || 
+                   email?.to?.toLowerCase().includes(searchText.toLowerCase()) || 
+                   email?.message?.toLowerCase().includes(searchText.toLowerCase())
+        })
+        setTempEmail(filteredEmail)
+    },[searchText, emails])
   return (
     <div>
         {
-            emails && emails?.map((email,idx) =>  <Message email={email}/>)
+            tempEmail && tempEmail?.map((email,idx) =>  <Message email={email}/>)
         }
     </div>
   )

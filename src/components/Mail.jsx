@@ -9,7 +9,8 @@ import {
     MdOutlineAddTask,
     MdOutlineDriveFileMove }
     from 'react-icons/md'
-import { BiArchive } from 'react-icons/bi'    
+import { BiArchive } from 'react-icons/bi' 
+import { motion } from 'framer-motion'   
 import { IoMdArrowBack, IoMdMore } from 'react-icons/io'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -30,7 +31,11 @@ const Mail = () => {
     }
 
   return (
-    <div className='flex-1 bg-white rounded-xl mx-5'>
+    <motion.div 
+    initial={{opacity:0, y:20}}
+    animate={{opacity:1,y:0}}
+    transition={{duration:0.5}}
+    className='flex-1 bg-white rounded-xl mx-5'>
         <div className='flex items-center justify-between px-4'>
             <div className='flex items-center gap-2 py-2 text-gray-700'>
                 <div onClick={() => navigate('/')} className='p-2 rounded-full hover:bg-gray-200 cursor-pointer'>
@@ -82,7 +87,7 @@ const Mail = () => {
                 <p>{selectedEmail?.message}</p>
             </div>
         </div>
-    </div>
+    </motion.div>
   )
 }
 
